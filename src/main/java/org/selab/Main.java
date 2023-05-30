@@ -30,7 +30,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         // Put SCD Tool here.
-        String tool = "GumTree-3.0";
+        String tool = "GumTree-3.0.0";
         DBManager db = null;
 
         // use command line arguments
@@ -48,12 +48,12 @@ public class Main {
 
             // Collect and store GumTree 3.0 EditOp, runtime in DB.
             PreparedStatement psGT3 = con.prepareStatement("insert into changes_GT_3 " +
-                    " ( file_id, tool, change_type, ESNodeEdit, ESNodeEdit_loc, " +
-                    " ESNodeEdit_pos, ESNode, ESNode_type, ESNode_pos, ESNode_length, " +
-                    " ESNode_label ) " +
+                    " ( file_id, tool, ESNodeEdit, ESNodeEdit_type, ESNodeEdit_pos, " +
+                    " ESNodeEdit_loc, ESNodeEdit_loc_type, ESNodeEdit_loc_pos, ESNodeEdit_loc_length, ESNodeEdit_loc_label, " +
+                    " ESNodeEdit_node, ESNodeEdit_node_type, ESNodeEdit_node_pos, ESNodeEdit_node_length, ESNodeEdit_node_label ) " +
                     " values ( ?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, " +
-                    " ? )");
+                    " ?, ?, ?, ?, ? )");
 
             PreparedStatement psGT3runTime = con.prepareStatement("insert into changes_GT_3_runtime " +
                     " (file_id, runtime_gitReset, runtime_editScript)" +
@@ -144,17 +144,23 @@ public class Main {
                                 psGT3runTime.clearParameters();
                                 psGT3.setInt(1, Integer.parseInt(fileId));         //file_id
                                 psGT3.setString(2, tool);           //tool: GT, etc..
-                                psGT3.setString(3, esNodeEdit.type);   // change_type
+
                                 // ESNodeEdit
-                                psGT3.setString(4, esNodeEdit.toString());
-                                psGT3.setString(5, esNodeEdit.location.toString());
-                                psGT3.setInt(6, esNodeEdit.position);
-                                // ESNode
-                                psGT3.setString(7, esNodeEdit.node.toString());
-                                psGT3.setString(8, esNodeEdit.node.type);
-                                psGT3.setInt(9, esNodeEdit.node.pos);
-                                psGT3.setInt(10, esNodeEdit.node.length);
-                                psGT3.setString(11, esNodeEdit.node.label);
+                                psGT3.setString(3, esNodeEdit.toString());
+                                psGT3.setString(4, esNodeEdit.type);
+                                psGT3.setInt(5, esNodeEdit.position);
+                                // ESNodeEdit_loc
+                                psGT3.setString(6, esNodeEdit.location.toString());
+                                psGT3.setString(7, esNodeEdit.location.type);
+                                psGT3.setInt(8, esNodeEdit.location.pos);
+                                psGT3.setInt(9, esNodeEdit.location.length);
+                                psGT3.setString(10, esNodeEdit.location.label);
+                                // ESNodeEdit_node
+                                psGT3.setString(11, esNodeEdit.node.toString());
+                                psGT3.setString(12, esNodeEdit.node.type);
+                                psGT3.setInt(13, esNodeEdit.node.pos);
+                                psGT3.setInt(14, esNodeEdit.node.length);
+                                psGT3.setString(15, esNodeEdit.node.label);
 
                                 psGT3runTime.setInt(1, Integer.parseInt(fileId));         //file_id
                                 psGT3runTime.setLong(2, gitResetElapsedTime);
